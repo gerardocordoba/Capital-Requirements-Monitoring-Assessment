@@ -1,0 +1,16 @@
+# Power BI local files
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Data files: never commit source data
+*.csv
+*.xlsx
+*.pbix
+
+# macOS
+.DS_Store
+
+# Secrets and keys
+.env
+*.pfx
+*.key
