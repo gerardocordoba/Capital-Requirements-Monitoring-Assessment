@@ -11,13 +11,8 @@ createOrReplace
 		table Fact_Exposure
 			lineageTag: d87b1184-c113-4ecb-bbbe-6bef05bc2d5a
 
-			measure 'Total RWA' = SUM(Fact_Exposure[RWA])
-				formatString: 0
-				lineageTag: d6281b27-95db-4fc8-8a71-c4be5c172eeb
-
 			column ExposureID
 				dataType: string
-				isHidden
 				lineageTag: e5eed440-3175-44d2-9138-b0304b812978
 				summarizeBy: none
 				sourceColumn: ExposureID
@@ -28,7 +23,7 @@ createOrReplace
 
 			column ReportMonth
 				dataType: dateTime
-				formatString: Long Date
+				formatString: dd/mm/yy
 				lineageTag: e8577f9b-bcf7-46b9-913d-ac865df18f3a
 				summarizeBy: none
 				sourceColumn: ReportMonth
@@ -37,9 +32,10 @@ createOrReplace
 
 				annotation UnderlyingDateTimeDataType = Date
 
+				annotation PBI_FormatHint = {"isCustom":true}
+
 			column CounterpartyID
 				dataType: string
-				isHidden
 				lineageTag: 6ede6ffc-a41f-4182-b1b5-20ed813b5b19
 				summarizeBy: none
 				sourceColumn: CounterpartyID
@@ -50,7 +46,6 @@ createOrReplace
 
 			column CountryCode
 				dataType: string
-				isHidden
 				lineageTag: e6ef7248-c4d5-4246-87c8-a0b86c295665
 				summarizeBy: none
 				sourceColumn: CountryCode
@@ -86,20 +81,24 @@ createOrReplace
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			column RWA
-				dataType: string
+				dataType: double
 				lineageTag: d54f8f63-ff54-43ff-b418-1dcfd738bd69
-				summarizeBy: none
+				summarizeBy: sum
 				sourceColumn: RWA
 
 				annotation SummarizationSetBy = Automatic
 
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 			column CapitalRequirement
-				dataType: string
+				dataType: double
 				lineageTag: 0c0e0fd9-7146-4ea7-a357-94297394e140
-				summarizeBy: none
+				summarizeBy: sum
 				sourceColumn: CapitalRequirement
 
 				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			column ScenarioCode
 				dataType: string
@@ -111,7 +110,6 @@ createOrReplace
 
 			column RiskBand
 				dataType: string
-				isHidden
 				lineageTag: 7e0a4615-5c6c-49ea-aa40-085f658b0781
 				summarizeBy: none
 				sourceColumn: RiskBand
@@ -121,13 +119,22 @@ createOrReplace
 				annotation SummarizationSetBy = Automatic
 
 			column RiskWeight
-				dataType: string
-				isHidden
+				dataType: double
 				lineageTag: 2831c997-75ec-40f7-987c-bc51d2883f0f
-				summarizeBy: none
+				summarizeBy: sum
 				sourceColumn: RiskWeight
 
 				changedProperty = IsHidden
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column CounterpartyKey
+				dataType: string
+				lineageTag: b16ce788-3662-4117-8e35-1de9c7642bdd
+				summarizeBy: none
+				sourceColumn: CounterpartyKey
 
 				annotation SummarizationSetBy = Automatic
 
@@ -143,124 +150,6 @@ createOrReplace
 						  #"Navigation 3"
 
 			annotation PBI_ResultType = Table
-
-		table DateTableTemplate_705f1332-93c7-444c-92a7-f9e40b07aed4
-			isHidden
-			isPrivate
-			lineageTag: b4afb394-d5f2-4d74-a4c1-326630c19757
-
-			column Date
-				dataType: dateTime
-				isHidden
-				formatString: General Date
-				lineageTag: 55a8a418-03d5-49a9-bcdb-b20b2205a3f7
-				dataCategory: PaddedDateTableDates
-				summarizeBy: none
-				isNameInferred
-				sourceColumn: [Date]
-
-				annotation SummarizationSetBy = User
-
-			column Year = YEAR([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: ad1be5ec-c537-41b0-9b23-548adb2a1e12
-				dataCategory: Years
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Year
-
-			column MonthNo = MONTH([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 6b0290a6-6a11-4107-bf0f-d0ef88a5fbf0
-				dataCategory: MonthOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = MonthNumber
-
-			column Month = FORMAT([Date], "MMMM")
-				dataType: string
-				isHidden
-				lineageTag: d1813dbe-6ad6-4804-8489-f0c317cbb2f1
-				dataCategory: Months
-				summarizeBy: none
-				sortByColumn: MonthNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Month
-
-			column QuarterNo = INT(([MonthNo] + 2) / 3)
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 660e984d-5150-4cb9-8889-901b5880a9e0
-				dataCategory: QuarterOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = QuarterNumber
-
-			column Quarter = "Qtr " & [QuarterNo]
-				dataType: string
-				isHidden
-				lineageTag: 687397f7-c5bd-4ec7-9ac7-28a131af92b0
-				dataCategory: Quarters
-				summarizeBy: none
-				sortByColumn: QuarterNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Quarter
-
-			column Day = DAY([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: bb52a72e-3190-46aa-a645-380de558303b
-				dataCategory: DayOfMonth
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Day
-
-			hierarchy 'Date Hierarchy'
-				lineageTag: cbdb644b-5f36-446c-bfb0-4cdb34ec670d
-
-				level Year
-					lineageTag: c9822516-f2e1-4a7a-86d9-ff637aea7b00
-					column: Year
-
-				level Quarter
-					lineageTag: b1eb881e-79a9-483e-ac7f-031ebb72e53e
-					column: Quarter
-
-				level Month
-					lineageTag: 592ff541-dbf9-4260-adcb-b96cbce6b037
-					column: Month
-
-				level Day
-					lineageTag: 61d02545-b05c-430f-88e5-79e73d1395cd
-					column: Day
-
-				annotation TemplateId = DateHierarchy
-
-			partition DateTableTemplate_705f1332-93c7-444c-92a7-f9e40b07aed4 = calculated
-				mode: import
-				source = Calendar(Date(2015,1,1), Date(2015,1,1))
-
-			annotation __PBI_TemplateDateTable = true
-
-			annotation DefaultItem = DateHierarchy
 
 		table Dim_Counterparty
 			lineageTag: a91abf26-5f5f-48e9-bed1-9d346cc9fe72
@@ -321,7 +210,6 @@ createOrReplace
 
 			column CountryCode
 				dataType: string
-				isHidden
 				lineageTag: 8dd6de8e-842d-4335-8892-12f3a8d4f03e
 				summarizeBy: none
 				sourceColumn: CountryCode
@@ -364,7 +252,6 @@ createOrReplace
 
 			column ScenarioCode
 				dataType: string
-				isHidden
 				lineageTag: a29b49ef-9f7b-49d8-9560-a118f3be46a6
 				summarizeBy: none
 				sourceColumn: ScenarioCode
@@ -480,20 +367,21 @@ createOrReplace
 
 		table Dim_Date
 			lineageTag: 81d00efe-3c85-4e72-bc1c-c2f1d9ab1276
+			dataCategory: Time
 
 			column Date
-				formatString: General Date
+				isKey
+				formatString: dd/mm/yy
 				lineageTag: 8a25e329-2123-40a6-a467-342a18c78611
 				summarizeBy: none
 				isNameInferred
 				sourceColumn: [Date]
 
-				variation Variation
-					isDefault
-					relationship: ec75d822-2159-46cf-895b-100b8defbcca
-					defaultHierarchy: LocalDateTable_41d20f57-427c-4a5e-92e4-30dfa0a6dff2.'Date Hierarchy'
-
 				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+				annotation PBI_FormatHint = {"isCustom":true}
 
 			column Year
 				formatString: 0
@@ -527,6 +415,7 @@ createOrReplace
 				summarizeBy: none
 				isNameInferred
 				sourceColumn: [MonthName]
+				sortByColumn: MonthNumber
 
 				annotation SummarizationSetBy = Automatic
 
@@ -549,18 +438,17 @@ createOrReplace
 				annotation SummarizationSetBy = Automatic
 
 			column MonthEnd
-				formatString: General Date
+				formatString: dd/mm/yy
 				lineageTag: 596e0dd3-af3d-444e-933c-fce356bdc6d8
 				summarizeBy: none
 				isNameInferred
 				sourceColumn: [MonthEnd]
 
-				variation Variation
-					isDefault
-					relationship: 0653c3f9-fc5b-4504-91c1-7d0e5f08e76b
-					defaultHierarchy: LocalDateTable_c26d16fc-1934-4393-a8e8-992bf9ae8eb5.'Date Hierarchy'
-
 				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+				annotation PBI_FormatHint = {"isCustom":true}
 
 			column IsMonthEnd
 				formatString: """TRUE"";""TRUE"";""FALSE"""
@@ -568,6 +456,13 @@ createOrReplace
 				summarizeBy: none
 				isNameInferred
 				sourceColumn: [IsMonthEnd]
+
+				annotation SummarizationSetBy = Automatic
+
+			column 'Has Data' = Dim_Date[Date] IN VALUES(Fact_Exposure[ReportMonth])
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				lineageTag: 85600e1e-5ab4-43d4-bff3-b1985e1dd6d9
+				summarizeBy: none
 
 				annotation SummarizationSetBy = Automatic
 
@@ -589,241 +484,437 @@ createOrReplace
 
 			annotation PBI_Id = 8b2f1ef7597742e29d265f220b1a0a2d
 
-		table LocalDateTable_41d20f57-427c-4a5e-92e4-30dfa0a6dff2
-			isHidden
-			showAsVariationsOnly
-			lineageTag: 303be521-3aad-42fa-b519-af19a8e72126
+		table _Measures
+			lineageTag: d39b6cad-6eb7-4a6c-935d-0d99052fdb98
 
-			column Date
-				dataType: dateTime
-				isHidden
+			measure 'Total RWA' = SUM(Fact_Exposure[RWA])
+				formatString: 0
+				displayFolder: 1 - RWA
+				lineageTag: d6281b27-95db-4fc8-8a71-c4be5c172eeb
+
+			measure 'Total Exposure' = Sum(Fact_Exposure[ExposureEUR])
+				displayFolder: 3 - Other
+				lineageTag: 45ab8ab8-ed78-497b-8053-08f9a0653eeb
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'RWA Density' = DIVIDE([Total RWA],[Total Exposure])
+				displayFolder: 1 - RWA
+				lineageTag: 91dd961c-d5d9-4647-85f3-ed4e0aa201df
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Capital Requirement %' = DIVIDE([Total Capital Requirement],[Total RWA])
+				formatString: 0
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 6132a5f8-2526-4860-9749-46523e9b0d86
+
+			measure 'RWA Actual' = CALCULATE([Total RWA],Dim_Scenario[ScenarioCode] = "Actual")
+				formatString: 0
+				displayFolder: 1 - RWA
+				lineageTag: 2460aca9-5807-4e04-bc10-1709425f25c9
+
+			measure 'RWA Budget' = CALCULATE([Total RWA],Dim_Scenario[ScenarioCode] = "Budget")
+				formatString: 0
+				displayFolder: 1 - RWA
+				lineageTag: 52a1ddb0-e025-47c8-ab96-b5ae46011ef9
+
+			measure 'RWA Variance' = ```
+					
+					VAR ActualMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Actual")
+					VAR BudgetMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Budget")
+					VAR SharedMonths = 
+						TREATAS(INTERSECT( ActualMonths, BudgetMonths ), Dim_Date[Date])
+					VAR RWAActual = CALCULATE([RWA Actual],SharedMonths)
+					VAR RWABudget = CALCULATE([RWA Budget],SharedMonths)
+					
+					RETURN
+					RWAActual - RWABudget
+					
+					
+					```
+				formatString: 0
+				displayFolder: 1 - RWA
+				lineageTag: c2fd2041-4d7f-496a-b593-9b39885b7b0d
+
+			measure 'RWA Budget Shared M' = ```
+					
+					
+					VAR ActualMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Fact_Exposure[ScenarioCode] = "Actual")
+					VAR BudgetMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Fact_Exposure[ScenarioCode] = "Budget")
+					VAR SharedMonths = 
+						INTERSECT(ActualMonths,BudgetMonths)
+					
+					RETURN
+					
+					CALCULATE([RWA Budget],SharedMonths)
+					
+					```
+				displayFolder: 1 - RWA
+				lineageTag: 8061dafe-704f-46e2-b027-c13a3c5d7f6a
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'RWA Variance %' = ```
+					
+					VAR ActualMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Actual")
+					VAR BudgetMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Budget")
+					VAR SharedMonths = 
+						TREATAS(INTERSECT( ActualMonths, BudgetMonths ), Dim_Date[Date])
+					
+					RETURN
+					
+					DIVIDE([RWA Variance],CALCULATE([RWA Budget],SharedMonths))
+					
+					```
+				displayFolder: 1 - RWA
+				lineageTag: ba3636e1-6cec-489f-9c8e-f5bb897d972e
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'RWA Prior Month' =
+					
+					
+					CALCULATE([Total RWA],PREVIOUSMONTH(Dim_Date[Date]))
+				displayFolder: 1 - RWA
+				lineageTag: 0c4172c7-8739-4c41-9d31-fd0452f7d037
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'RWA MoM %' =
+					
+					DIVIDE([Total RWA] - [RWA Prior Month],[RWA Prior Month])
+				displayFolder: 1 - RWA
+				lineageTag: 5d217eae-674e-4bc3-8978-f0c054cfc3cd
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'RWA Rolling 3M Avg' =
+					
+					IF(
+					    NOT ISBLANK( [Total RWA] ),
+					    DIVIDE(
+					        CALCULATE(
+					            [Total RWA],
+					            DATESINPERIOD( Dim_Date[Date], MAX( Dim_Date[Date] ), -[Months in Rolling Window], MONTH )
+					        ),
+					        [Months in Rolling Window]
+					    )
+					)
+				displayFolder: 1 - RWA
+				lineageTag: 52b2bba1-701d-4c5d-8467-74b25e0d9243
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Months in Rolling Window' =
+					
+					IF(
+					    NOT ISBLANK( [Total RWA] ),
+					    VAR LastReportMonth = MAX( Dim_Date[Date] )
+					    VAR MonthWindow = DATESINPERIOD( Dim_Date[Date], LastReportMonth, -3, MONTH )
+					    RETURN
+					        CALCULATE( DISTINCTCOUNT( Fact_Exposure[ReportMonth] ), MonthWindow )
+					)
+				formatString: 0
+				displayFolder: 3 - Other
+				lineageTag: fe901116-92c2-43a3-8fd8-5a0c15eca5e4
+
+			measure 'Capital Requirement incl. Buffer' =
+					
+					[Total Capital Requirement] + ([Total RWA] * .025)
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 22119abf-47bf-4d5a-8af8-9bba70621d81
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Total Capital Requirement' = SUM(Fact_Exposure[CapitalRequirement])
+				displayFolder: 2 - Capital Requirement
+				lineageTag: b9d1daf4-fa0c-4dfc-ab7f-c193ab07b756
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Title - Executive Summary' = "Executive Summary - Capital Requirements Monitoring"
+				displayFolder: 5 - Titles
+				lineageTag: fdaf6cb0-7dcc-44e1-afc8-5e4713a9d132
+
+			measure 'Capital Requirement Actual' =
+					
+					CALCULATE([Total Capital Requirement],Dim_Scenario[ScenarioCode] = "Actual")
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 943b72f3-699d-4224-94bb-1d237684792b
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Capital Requirement Budget' =
+					
+					CALCULATE([Total Capital Requirement],Dim_Scenario[ScenarioCode] = "Budget")
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 14ac342f-f556-403e-b198-91bf8391c229
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Capital Requirement Variance' = ```
+					
+					VAR ActualMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Actual")
+					VAR BudgetMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Budget")
+					VAR SharedMonths = 
+						TREATAS(INTERSECT( ActualMonths, BudgetMonths ), Dim_Date[Date])
+					VAR CRActual = CALCULATE([Capital Requirement Actual],SharedMonths)
+					VAR CRBudget = CALCULATE([Capital Requirement Budget],SharedMonths)
+					
+					RETURN
+					CRActual - CRBudget
+					```
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 5e980a26-acfb-4153-b9d1-a12fd43c4f4a
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Title - Country - Segment Analysis' = "Country-Segment Analysis"
+				displayFolder: 5 - Titles
+				lineageTag: 26f293ce-9deb-4abb-b8e0-cb65f065a774
+
+			measure 'Title - Variance Trend and Data Quality' = "Variance Trends & Data Quality"
+				displayFolder: 5 - Titles
+				lineageTag: 9cf1d668-e132-4aad-9736-eb7d0a5853f2
+
+			measure 'Title - Exposure Detail' =
+					
+					"Exposure detail for "
+					    & IF( ISFILTERED( Dim_Country[CountryName] ),
+					          CONCATENATEX( VALUES( Dim_Country[CountryName] ), Dim_Country[CountryName], ", " ),
+					          "all countries" )
+					    & ", "
+					    & IF( ISFILTERED( Dim_Segment[SegmentName] ),
+					          CONCATENATEX( VALUES( Dim_Segment[SegmentName] ), Dim_Segment[SegmentName], ", " ) & " segment",
+					          "all segments" )
+					    & ", and "
+					    & IF( ISFILTERED( Dim_Scenario[ScenarioCode] ),
+					          CONCATENATEX( VALUES( Dim_Scenario[ScenarioCode] ), Dim_Scenario[ScenarioCode], ", " ) & " scenario",
+					          "all scenarios" )
+				displayFolder: 5 - Titles
+				lineageTag: d6dbce5c-80fd-4760-8ad5-044e0c48701a
+
+			measure 'Capital Requirement Variance %' = ```
+					
+					VAR ActualMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Actual")
+					VAR BudgetMonths =
+						CALCULATETABLE(VALUES(Fact_Exposure[ReportMonth]),Dim_Scenario[ScenarioCode] = "Budget")
+					VAR SharedMonths = 
+						TREATAS(INTERSECT( ActualMonths, BudgetMonths ), Dim_Date[Date])
+					
+					RETURN
+					
+					DIVIDE([Capital Requirement Variance],CALCULATE([Capital Requirement Budget],SharedMonths))
+					```
+				displayFolder: 2 - Capital Requirement
+				lineageTag: 8b9be5b2-541d-4cfa-aecf-ed5165d9fafc
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Control - Rows' =
+					
+					COUNTROWS(Fact_Exposure)
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: 48fd734e-4982-4bac-bb3c-3119c046d0b8
+
+			measure 'Control - Counterparties' =
+					
+					DISTINCTCOUNT(Fact_Exposure[CounterpartyID])
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: 961bcc48-aa53-42f1-8f78-36c440bcfd33
+
+			measure 'Control - Currencies' =
+					
+					DISTINCTCOUNT(Fact_Exposure[Currency])
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: 18a63a47-0540-44a4-ab67-63ad15aa1d49
+
+			measure 'Control - ExposureCount' =
+					
+					COUNT(Fact_Exposure[ExposureEUR])
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: 3e889697-fd03-402b-897e-796279848df1
+
+			measure 'Control - ExposureSum' =
+					
+					SUM(Fact_Exposure[ExposureEUR])
+				displayFolder: 4 - Controls
+				lineageTag: fa5a4baa-b438-4763-bcc3-4ea1be87a390
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Control - RWACount' =
+					
+					COUNT(Fact_Exposure[RWA])
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: 60637c08-0073-4b58-991f-2a423fd7077f
+
+			measure 'Control - RWASum' =
+					
+					SUM(Fact_Exposure[RWA])
+				displayFolder: 4 - Controls
+				lineageTag: 609b48d4-2fc9-46b0-89a9-44d1bf187a51
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Control - CRCount' =
+					
+					COUNT(Fact_Exposure[CapitalRequirement])
+				formatString: 0
+				displayFolder: 4 - Controls
+				lineageTag: ed0bd4d0-ac41-4086-a4dd-4f32004b8dc6
+
+			measure 'Control - CRSum' =
+					
+					SUM(Fact_Exposure[CapitalRequirement])
+				displayFolder: 4 - Controls
+				lineageTag: c0b7943a-ffb3-4f57-b7a0-10968c13629c
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Latest Date With Data' =
+					
+					IF( NOT ISBLANK( [Total RWA] ), MAX( Dim_Date[Date] ) )
 				formatString: General Date
-				lineageTag: f8dc2ac9-a9d0-47e7-90ac-e344585de0b1
-				dataCategory: PaddedDateTableDates
-				summarizeBy: none
-				isNameInferred
-				sourceColumn: [Date]
+				displayFolder: 3 - Other
+				lineageTag: 35f32b8f-db05-4c55-98b4-e976c5a40677
 
-				annotation SummarizationSetBy = User
-
-			column Year = YEAR([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 3213a8af-5845-496b-b1ec-42d096feb001
-				dataCategory: Years
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Year
-
-			column MonthNo = MONTH([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 3e17f1e5-4418-445d-b87d-d495261e7d2d
-				dataCategory: MonthOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = MonthNumber
-
-			column Month = FORMAT([Date], "MMMM")
-				dataType: string
-				isHidden
-				lineageTag: d77a8487-8f27-4ebb-a546-ed90123d74ab
-				dataCategory: Months
-				summarizeBy: none
-				sortByColumn: MonthNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Month
-
-			column QuarterNo = INT(([MonthNo] + 2) / 3)
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 19c0968f-05ce-49de-a982-0a7537ee869d
-				dataCategory: QuarterOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = QuarterNumber
-
-			column Quarter = "Qtr " & [QuarterNo]
-				dataType: string
-				isHidden
-				lineageTag: 4dc233ca-66e1-41d4-aaa9-c33469b6e0f9
-				dataCategory: Quarters
-				summarizeBy: none
-				sortByColumn: QuarterNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Quarter
-
-			column Day = DAY([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: c4bdb25a-05e1-45e5-b530-124639f9cf23
-				dataCategory: DayOfMonth
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Day
-
-			hierarchy 'Date Hierarchy'
-				lineageTag: 3bcb3501-4b73-4d9f-9298-050f54699551
-
-				level Year
-					lineageTag: bb1e97e3-57db-428b-b8e2-8445cf669ef4
-					column: Year
-
-				level Quarter
-					lineageTag: 7b0d134c-6a8e-42c3-a0bf-bef5c4384ac5
-					column: Quarter
-
-				level Month
-					lineageTag: 4553e4cc-df31-4839-9964-7e2d9a8079fb
-					column: Month
-
-				level Day
-					lineageTag: a51b0c84-5305-46d0-8210-b88d8d86e024
-					column: Day
-
-				annotation TemplateId = DateHierarchy
-
-			partition LocalDateTable_41d20f57-427c-4a5e-92e4-30dfa0a6dff2 = calculated
-				mode: import
-				source = Calendar(Date(Year(MIN('Dim_Date'[Date])), 1, 1), Date(Year(MAX('Dim_Date'[Date])), 12, 31))
-
-			annotation __PBI_LocalDateTable = true
-
-		table LocalDateTable_c26d16fc-1934-4393-a8e8-992bf9ae8eb5
-			isHidden
-			showAsVariationsOnly
-			lineageTag: 571fcfad-0809-4ef4-ba9b-c3c9471cbc16
-
-			column Date
-				dataType: dateTime
-				isHidden
+			measure 'Latest Date With Variance' =
+					
+					IF( NOT ISBLANK( [RWA Variance] ), MAX( Dim_Date[Date] ) )
 				formatString: General Date
-				lineageTag: 4fe183bd-bcf7-4a7b-ba91-0bfd7871fa53
-				dataCategory: PaddedDateTableDates
-				summarizeBy: none
-				isNameInferred
-				sourceColumn: [Date]
+				displayFolder: 3 - Other
+				lineageTag: 2a470ae8-5726-41e7-9ee1-55e08d98a09b
 
-				annotation SummarizationSetBy = User
-
-			column Year = YEAR([Date])
-				dataType: int64
+			column z
 				isHidden
 				formatString: 0
-				lineageTag: a19330f7-11a7-4a30-a734-f57b6e505f7c
-				dataCategory: Years
-				summarizeBy: none
+				lineageTag: 684dd128-0928-43ff-bd97-af69ca531868
+				summarizeBy: sum
+				sourceColumn: [Column]
 
-				annotation SummarizationSetBy = User
+				annotation SummarizationSetBy = Automatic
 
-				annotation TemplateId = Year
-
-			column MonthNo = MONTH([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 83b2a29e-8d9a-41eb-aac5-51a63cdf38df
-				dataCategory: MonthOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = MonthNumber
-
-			column Month = FORMAT([Date], "MMMM")
-				dataType: string
-				isHidden
-				lineageTag: 6f0139be-6fec-486d-bd4b-a2f4dfc0b5b0
-				dataCategory: Months
-				summarizeBy: none
-				sortByColumn: MonthNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Month
-
-			column QuarterNo = INT(([MonthNo] + 2) / 3)
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 68f04732-0a36-4101-89cb-4b22f3e249d7
-				dataCategory: QuarterOfYear
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = QuarterNumber
-
-			column Quarter = "Qtr " & [QuarterNo]
-				dataType: string
-				isHidden
-				lineageTag: 074945c3-6f86-4cf5-9670-7e3b04946eaa
-				dataCategory: Quarters
-				summarizeBy: none
-				sortByColumn: QuarterNo
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Quarter
-
-			column Day = DAY([Date])
-				dataType: int64
-				isHidden
-				formatString: 0
-				lineageTag: 93860b29-9c9f-4a4a-a3a9-cf4ddfc2c3cf
-				dataCategory: DayOfMonth
-				summarizeBy: none
-
-				annotation SummarizationSetBy = User
-
-				annotation TemplateId = Day
-
-			hierarchy 'Date Hierarchy'
-				lineageTag: d11c9941-8fc7-49dd-be9c-05c65155a1dd
-
-				level Year
-					lineageTag: dd3e232a-0637-4fcf-9a98-854dd1307d67
-					column: Year
-
-				level Quarter
-					lineageTag: 4a682767-4eba-402f-a1dd-00f69d3b7106
-					column: Quarter
-
-				level Month
-					lineageTag: 71667533-3544-421b-ae77-e858691c748e
-					column: Month
-
-				level Day
-					lineageTag: d9f09bbb-f0b4-4f66-8dbb-5b45719497da
-					column: Day
-
-				annotation TemplateId = DateHierarchy
-
-			partition LocalDateTable_c26d16fc-1934-4393-a8e8-992bf9ae8eb5 = calculated
+			partition _Measures = calculated
 				mode: import
-				source = Calendar(Date(Year(MIN('Dim_Date'[MonthEnd])), 1, 1), Date(Year(MAX('Dim_Date'[MonthEnd])), 12, 31))
+				source = Row("Column", BLANK())
 
-			annotation __PBI_LocalDateTable = true
+			annotation PBI_Id = dafcbe7b42e04832bf03b737b900e02b
 
-		relationship AutoDetected_7c2cfbf0-bffe-46fd-a99d-9a20c728020c
-			fromColumn: Fact_Exposure.CounterpartyID
-			toColumn: Dim_Counterparty.CounterpartyID
+		table Control_Data
+			lineageTag: 4b4bceb0-02fe-49f9-8c93-1a55f1c63fbe
+
+			column SourceRows
+				dataType: int64
+				formatString: 0
+				lineageTag: 08f6e847-289b-486f-8bea-b794488d219e
+				summarizeBy: sum
+				sourceColumn: SourceRows
+
+				annotation SummarizationSetBy = Automatic
+
+			column DistinctCounterpartyID
+				dataType: int64
+				formatString: 0
+				lineageTag: 007efe6d-6ee3-405e-9d08-d649b96be61f
+				summarizeBy: count
+				sourceColumn: DistinctCounterpartyID
+
+				annotation SummarizationSetBy = Automatic
+
+			column UniqueCurrencies
+				dataType: int64
+				formatString: 0
+				lineageTag: bdd3a0f6-abb1-4f84-bd3d-3d0e31b1131e
+				summarizeBy: sum
+				sourceColumn: UniqueCurrencies
+
+				annotation SummarizationSetBy = Automatic
+
+			column CountExposure
+				dataType: int64
+				formatString: 0
+				lineageTag: 30bc0d79-657d-4987-a16e-427d1839ffda
+				summarizeBy: sum
+				sourceColumn: CountExposure
+
+				annotation SummarizationSetBy = Automatic
+
+			column SumExposure
+				dataType: double
+				lineageTag: 1a3d21c2-1c7e-486d-9a17-73ae557a2772
+				summarizeBy: sum
+				sourceColumn: SumExposure
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column CountRWA
+				dataType: int64
+				formatString: 0
+				lineageTag: c20676ba-5e01-4005-b92c-62161d3ccf89
+				summarizeBy: sum
+				sourceColumn: CountRWA
+
+				annotation SummarizationSetBy = Automatic
+
+			column SumRWA
+				dataType: double
+				lineageTag: 3bcfa24c-f9f1-446d-8bdc-d25242ea075d
+				summarizeBy: sum
+				sourceColumn: SumRWA
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column CountCapitalRequirement
+				dataType: int64
+				formatString: 0
+				lineageTag: 65435cb7-1735-49ef-b584-2b7cca9b930d
+				summarizeBy: sum
+				sourceColumn: CountCapitalRequirement
+
+				annotation SummarizationSetBy = Automatic
+
+			column SumCapitalRequirement
+				dataType: double
+				lineageTag: fb0cf9e3-ca85-4aab-ac6b-c78699cf400f
+				summarizeBy: sum
+				sourceColumn: SumCapitalRequirement
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			partition Control_Data = m
+				mode: import
+				source =
+						let
+						  Source = PowerBI.Dataflows([]),
+						  #"Navigation 1" = Source{[workspaceId = "72206e88-5cef-4742-bff0-0ac325198c8a"]}[Data],
+						  #"Navigation 2" = #"Navigation 1"{[dataflowId = "34ddd13c-8f5d-4590-a10a-2d338f73ee41"]}[Data],
+						  #"Navigation 3" = #"Navigation 2"{[entity = "Control_Data"]}[Data]
+						in
+						  #"Navigation 3"
+
+			annotation PBI_ResultType = Table
 
 		relationship AutoDetected_d107a402-1141-4048-bec1-9c561e30c7c6
 			fromColumn: Fact_Exposure.CountryCode
@@ -835,6 +926,8 @@ createOrReplace
 			toColumn: Dim_Country.CountryCode
 
 		relationship AutoDetected_cb1e382c-3daa-4ff7-9f8b-048044538f78
+			crossFilteringBehavior: bothDirections
+			securityFilteringBehavior: bothDirections
 			fromColumn: Security_UserCountry.CountryCode
 			toColumn: Dim_Country.CountryCode
 
@@ -846,25 +939,54 @@ createOrReplace
 			fromColumn: Fact_Exposure.ScenarioCode
 			toColumn: Dim_Scenario.ScenarioCode
 
-		relationship ec75d822-2159-46cf-895b-100b8defbcca
-			joinOnDateBehavior: datePartOnly
-			fromColumn: Dim_Date.Date
-			toColumn: LocalDateTable_41d20f57-427c-4a5e-92e4-30dfa0a6dff2.Date
-
-		relationship 0653c3f9-fc5b-4504-91c1-7d0e5f08e76b
-			joinOnDateBehavior: datePartOnly
-			fromColumn: Dim_Date.MonthEnd
-			toColumn: LocalDateTable_c26d16fc-1934-4393-a8e8-992bf9ae8eb5.Date
-
 		relationship e294e28b-40ab-f112-1043-309509f03c42
 			fromColumn: Fact_Exposure.ReportMonth
 			toColumn: Dim_Date.Date
 
+		relationship 1c73ee99-20ce-d46d-771a-6aeb9fcff250
+			fromColumn: Fact_Exposure.CounterpartyKey
+			toColumn: Dim_Counterparty.CounterpartyID
+
+		role 'Group Viewer'
+			modelPermission: read
+
+			tablePermission _Measures
+
+			annotation PBI_Id = 197cc06c43b641639869773b91e63a83
+
+		role 'PL Country Manager'
+			modelPermission: read
+
+			tablePermission Security_UserCountry = [UserEmail] == "anna.nowak@example.com"
+
+			annotation PBI_Id = 9cd691791e3d4d5b95c3f79d734c5729
+
+		role 'DE Country Manager'
+			modelPermission: read
+
+			tablePermission Security_UserCountry = [UserEmail] == "hans.mueller@example.com"
+
+			annotation PBI_Id = b310a2f399c5488684eb66bcbf86c37e
+
+		role 'DE FR Manager'
+			modelPermission: read
+
+			tablePermission Security_UserCountry = [UserEmail] == "dana.lee@example.com"
+
+			annotation PBI_Id = fd5f4ca93f43408ca3a86d214ddc3563
+
+		role 'PL Dynamic'
+			modelPermission: read
+
+			tablePermission Security_UserCountry = Security_UserCountry[UserEmail] = USERPRINCIPALNAME()
+
+			annotation PBI_Id = 4a139e2d79ff42eaa7ccdfe99a1284a4
+
 		annotation __PBI_TimeIntelligenceEnabled = 1
 
-		annotation PBI_QueryOrder = ["Fact_Exposure","Dim_Counterparty","Dim_Country","Dim_Scenario","Dim_Segment","Security_UserCountry"]
+		annotation PBI_QueryOrder = ["Fact_Exposure","Dim_Counterparty","Dim_Country","Dim_Scenario","Dim_Segment","Security_UserCountry","Control_Data"]
 
-		annotation __LastRPTime = 134389641145831022
+		annotation __LastRPTime = 134392108916113572
 
-		annotation PBI_ProTooling = ["WebModelingEdit","TMDLView_Desktop"]
+		annotation PBI_ProTooling = ["WebModelingEdit","TMDLView_Desktop","DaxQueryView_Desktop"]
 
