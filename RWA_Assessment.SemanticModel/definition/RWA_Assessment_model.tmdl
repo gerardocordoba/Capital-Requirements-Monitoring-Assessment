@@ -13,6 +13,7 @@ createOrReplace
 
 			column ExposureID
 				dataType: string
+				isHidden
 				lineageTag: e5eed440-3175-44d2-9138-b0304b812978
 				summarizeBy: none
 				sourceColumn: ExposureID
@@ -36,6 +37,7 @@ createOrReplace
 
 			column CounterpartyID
 				dataType: string
+				isHidden
 				lineageTag: 6ede6ffc-a41f-4182-b1b5-20ed813b5b19
 				summarizeBy: none
 				sourceColumn: CounterpartyID
@@ -56,9 +58,12 @@ createOrReplace
 
 			column SegmentCode
 				dataType: string
+				isHidden
 				lineageTag: f7838876-a687-4538-a69c-c635a42995b3
 				summarizeBy: none
 				sourceColumn: SegmentCode
+
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
@@ -102,9 +107,12 @@ createOrReplace
 
 			column ScenarioCode
 				dataType: string
+				isHidden
 				lineageTag: 6fd17628-71b2-45bc-b222-5597eff6ccc7
 				summarizeBy: none
 				sourceColumn: ScenarioCode
+
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
@@ -132,9 +140,30 @@ createOrReplace
 
 			column CounterpartyKey
 				dataType: string
+				isHidden
 				lineageTag: b16ce788-3662-4117-8e35-1de9c7642bdd
 				summarizeBy: none
 				sourceColumn: CounterpartyKey
+
+				changedProperty = IsHidden
+
+				annotation SummarizationSetBy = Automatic
+
+			column 'RWA Imputed'
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				lineageTag: 62cd8bc8-5e2d-4db2-b5b8-9086d3add038
+				summarizeBy: none
+				sourceColumn: RWA Imputed
+
+				annotation SummarizationSetBy = Automatic
+
+			column 'CapitalRequirement Imputed'
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				lineageTag: 256ec35c-eca3-4811-8ef3-126ae3502d79
+				summarizeBy: none
+				sourceColumn: CapitalRequirement Imputed
 
 				annotation SummarizationSetBy = Automatic
 
@@ -210,6 +239,7 @@ createOrReplace
 
 			column CountryCode
 				dataType: string
+				isHidden
 				lineageTag: 8dd6de8e-842d-4335-8892-12f3a8d4f03e
 				summarizeBy: none
 				sourceColumn: CountryCode
@@ -252,6 +282,7 @@ createOrReplace
 
 			column ScenarioCode
 				dataType: string
+				isHidden
 				lineageTag: a29b49ef-9f7b-49d8-9560-a118f3be46a6
 				summarizeBy: none
 				sourceColumn: ScenarioCode
@@ -270,9 +301,12 @@ createOrReplace
 
 			column Description
 				dataType: string
+				isHidden
 				lineageTag: c618fe98-24c3-4420-a4e8-970c863b0b18
 				summarizeBy: none
 				sourceColumn: Description
+
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
@@ -384,6 +418,7 @@ createOrReplace
 				annotation PBI_FormatHint = {"isCustom":true}
 
 			column Year
+				isHidden
 				formatString: 0
 				lineageTag: 29226de3-3ed5-414b-8b1d-5f65d48b86ee
 				summarizeBy: sum
@@ -393,6 +428,7 @@ createOrReplace
 				annotation SummarizationSetBy = Automatic
 
 			column Quarter
+				isHidden
 				lineageTag: 50f0d1ff-296d-42df-ae2b-cf4846995d64
 				summarizeBy: none
 				isNameInferred
@@ -420,6 +456,7 @@ createOrReplace
 				annotation SummarizationSetBy = Automatic
 
 			column YearMonth
+				isHidden
 				lineageTag: 8127f974-c986-4ba1-9df2-d197686bcb95
 				summarizeBy: none
 				isNameInferred
@@ -493,7 +530,7 @@ createOrReplace
 				lineageTag: d6281b27-95db-4fc8-8a71-c4be5c172eeb
 
 			measure 'Total Exposure' = Sum(Fact_Exposure[ExposureEUR])
-				displayFolder: 3 - Other
+				displayFolder: 1 - RWA
 				lineageTag: 45ab8ab8-ed78-497b-8053-08f9a0653eeb
 
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -505,7 +542,7 @@ createOrReplace
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'Capital Requirement %' = DIVIDE([Total Capital Requirement],[Total RWA])
-				formatString: 0
+				formatString: 0%;-0%;0%
 				displayFolder: 2 - Capital Requirement
 				lineageTag: 6132a5f8-2526-4860-9749-46523e9b0d86
 
@@ -554,6 +591,7 @@ createOrReplace
 					CALCULATE([RWA Budget],SharedMonths)
 					
 					```
+				isHidden
 				displayFolder: 1 - RWA
 				lineageTag: 8061dafe-704f-46e2-b027-c13a3c5d7f6a
 
@@ -573,10 +611,9 @@ createOrReplace
 					DIVIDE([RWA Variance],CALCULATE([RWA Budget],SharedMonths))
 					
 					```
+				formatString: 0.00%;-0.00%;0.00%
 				displayFolder: 1 - RWA
 				lineageTag: ba3636e1-6cec-489f-9c8e-f5bb897d972e
-
-				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'RWA Prior Month' =
 					
@@ -590,18 +627,17 @@ createOrReplace
 			measure 'RWA MoM %' =
 					
 					DIVIDE([Total RWA] - [RWA Prior Month],[RWA Prior Month])
+				formatString: 0.00%;-0.00%;0.00%
 				displayFolder: 1 - RWA
 				lineageTag: 5d217eae-674e-4bc3-8978-f0c054cfc3cd
-
-				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'RWA Rolling 3M Avg' =
 					
 					IF(
-					    NOT ISBLANK( [Total RWA] ),
+					    NOT ISBLANK( [RWA Actual] ),
 					    DIVIDE(
 					        CALCULATE(
-					            [Total RWA],
+					            [RWA Actual],
 					            DATESINPERIOD( Dim_Date[Date], MAX( Dim_Date[Date] ), -[Months in Rolling Window], MONTH )
 					        ),
 					        [Months in Rolling Window]
@@ -640,6 +676,7 @@ createOrReplace
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'Title - Executive Summary' = "Executive Summary - Capital Requirements Monitoring"
+				isHidden
 				displayFolder: 5 - Titles
 				lineageTag: fdaf6cb0-7dcc-44e1-afc8-5e4713a9d132
 
@@ -679,10 +716,12 @@ createOrReplace
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'Title - Country - Segment Analysis' = "Country-Segment Analysis"
+				isHidden
 				displayFolder: 5 - Titles
 				lineageTag: 26f293ce-9deb-4abb-b8e0-cb65f065a774
 
 			measure 'Title - Variance Trend and Data Quality' = "Variance Trends & Data Quality"
+				isHidden
 				displayFolder: 5 - Titles
 				lineageTag: 9cf1d668-e132-4aad-9736-eb7d0a5853f2
 
@@ -700,6 +739,7 @@ createOrReplace
 					    & IF( ISFILTERED( Dim_Scenario[ScenarioCode] ),
 					          CONCATENATEX( VALUES( Dim_Scenario[ScenarioCode] ), Dim_Scenario[ScenarioCode], ", " ) & " scenario",
 					          "all scenarios" )
+				isHidden
 				displayFolder: 5 - Titles
 				lineageTag: d6dbce5c-80fd-4760-8ad5-044e0c48701a
 
@@ -716,15 +756,15 @@ createOrReplace
 					
 					DIVIDE([Capital Requirement Variance],CALCULATE([Capital Requirement Budget],SharedMonths))
 					```
+				formatString: 0.00%;-0.00%;0.00%
 				displayFolder: 2 - Capital Requirement
 				lineageTag: 8b9be5b2-541d-4cfa-aecf-ed5165d9fafc
-
-				annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 			measure 'Control - Rows' =
 					
 					COUNTROWS(Fact_Exposure)
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 48fd734e-4982-4bac-bb3c-3119c046d0b8
 
@@ -732,6 +772,7 @@ createOrReplace
 					
 					DISTINCTCOUNT(Fact_Exposure[CounterpartyID])
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 961bcc48-aa53-42f1-8f78-36c440bcfd33
 
@@ -739,6 +780,7 @@ createOrReplace
 					
 					DISTINCTCOUNT(Fact_Exposure[Currency])
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 18a63a47-0540-44a4-ab67-63ad15aa1d49
 
@@ -746,12 +788,14 @@ createOrReplace
 					
 					COUNT(Fact_Exposure[ExposureEUR])
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 3e889697-fd03-402b-897e-796279848df1
 
 			measure 'Control - ExposureSum' =
 					
 					SUM(Fact_Exposure[ExposureEUR])
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: fa5a4baa-b438-4763-bcc3-4ea1be87a390
 
@@ -761,12 +805,14 @@ createOrReplace
 					
 					COUNT(Fact_Exposure[RWA])
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 60637c08-0073-4b58-991f-2a423fd7077f
 
 			measure 'Control - RWASum' =
 					
 					SUM(Fact_Exposure[RWA])
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: 609b48d4-2fc9-46b0-89a9-44d1bf187a51
 
@@ -776,12 +822,14 @@ createOrReplace
 					
 					COUNT(Fact_Exposure[CapitalRequirement])
 				formatString: 0
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: ed0bd4d0-ac41-4086-a4dd-4f32004b8dc6
 
 			measure 'Control - CRSum' =
 					
 					SUM(Fact_Exposure[CapitalRequirement])
+				isHidden
 				displayFolder: 4 - Controls
 				lineageTag: c0b7943a-ffb3-4f57-b7a0-10968c13629c
 
@@ -821,45 +869,48 @@ createOrReplace
 
 			column SourceRows
 				dataType: int64
+				isHidden
 				formatString: 0
 				lineageTag: 08f6e847-289b-486f-8bea-b794488d219e
 				summarizeBy: sum
 				sourceColumn: SourceRows
 
+				changedProperty = IsHidden
+
 				annotation SummarizationSetBy = Automatic
 
 			column DistinctCounterpartyID
 				dataType: int64
+				isHidden
 				formatString: 0
 				lineageTag: 007efe6d-6ee3-405e-9d08-d649b96be61f
 				summarizeBy: count
 				sourceColumn: DistinctCounterpartyID
 
-				annotation SummarizationSetBy = Automatic
-
-			column UniqueCurrencies
-				dataType: int64
-				formatString: 0
-				lineageTag: bdd3a0f6-abb1-4f84-bd3d-3d0e31b1131e
-				summarizeBy: sum
-				sourceColumn: UniqueCurrencies
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
 			column CountExposure
 				dataType: int64
+				isHidden
 				formatString: 0
 				lineageTag: 30bc0d79-657d-4987-a16e-427d1839ffda
 				summarizeBy: sum
 				sourceColumn: CountExposure
 
+				changedProperty = IsHidden
+
 				annotation SummarizationSetBy = Automatic
 
 			column SumExposure
 				dataType: double
+				isHidden
 				lineageTag: 1a3d21c2-1c7e-486d-9a17-73ae557a2772
 				summarizeBy: sum
 				sourceColumn: SumExposure
+
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
@@ -867,18 +918,24 @@ createOrReplace
 
 			column CountRWA
 				dataType: int64
+				isHidden
 				formatString: 0
 				lineageTag: c20676ba-5e01-4005-b92c-62161d3ccf89
 				summarizeBy: sum
 				sourceColumn: CountRWA
 
+				changedProperty = IsHidden
+
 				annotation SummarizationSetBy = Automatic
 
 			column SumRWA
 				dataType: double
+				isHidden
 				lineageTag: 3bcfa24c-f9f1-446d-8bdc-d25242ea075d
 				summarizeBy: sum
 				sourceColumn: SumRWA
+
+				changedProperty = IsHidden
 
 				annotation SummarizationSetBy = Automatic
 
@@ -886,22 +943,37 @@ createOrReplace
 
 			column CountCapitalRequirement
 				dataType: int64
+				isHidden
 				formatString: 0
 				lineageTag: 65435cb7-1735-49ef-b584-2b7cca9b930d
 				summarizeBy: sum
 				sourceColumn: CountCapitalRequirement
 
+				changedProperty = IsHidden
+
 				annotation SummarizationSetBy = Automatic
 
 			column SumCapitalRequirement
 				dataType: double
+				isHidden
 				lineageTag: fb0cf9e3-ca85-4aab-ac6b-c78699cf400f
 				summarizeBy: sum
 				sourceColumn: SumCapitalRequirement
 
+				changedProperty = IsHidden
+
 				annotation SummarizationSetBy = Automatic
 
 				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column DistinctCurrencies
+				dataType: int64
+				formatString: 0
+				lineageTag: e82b3b6b-c7d3-47de-82e2-95e44bd22e41
+				summarizeBy: sum
+				sourceColumn: DistinctCurrencies
+
+				annotation SummarizationSetBy = Automatic
 
 			partition Control_Data = m
 				mode: import
@@ -926,8 +998,6 @@ createOrReplace
 			toColumn: Dim_Country.CountryCode
 
 		relationship AutoDetected_cb1e382c-3daa-4ff7-9f8b-048044538f78
-			crossFilteringBehavior: bothDirections
-			securityFilteringBehavior: bothDirections
 			fromColumn: Security_UserCountry.CountryCode
 			toColumn: Dim_Country.CountryCode
 
@@ -947,46 +1017,54 @@ createOrReplace
 			fromColumn: Fact_Exposure.CounterpartyKey
 			toColumn: Dim_Counterparty.CounterpartyID
 
-		role 'Group Viewer'
-			modelPermission: read
-
-			tablePermission _Measures
-
-			annotation PBI_Id = 197cc06c43b641639869773b91e63a83
-
 		role 'PL Country Manager'
 			modelPermission: read
 
-			tablePermission Security_UserCountry = [UserEmail] == "anna.nowak@example.com"
+			tablePermission Dim_Country =
+					Dim_Country[CountryCode] IN
+					    SELECTCOLUMNS(
+					        FILTER( ALL( Security_UserCountry ), Security_UserCountry[UserEmail] = "anna.nowak@example.com" ),
+					        "CountryCode", Security_UserCountry[CountryCode]
+					    )
 
-			annotation PBI_Id = 9cd691791e3d4d5b95c3f79d734c5729
-
-		role 'DE Country Manager'
-			modelPermission: read
-
-			tablePermission Security_UserCountry = [UserEmail] == "hans.mueller@example.com"
-
-			annotation PBI_Id = b310a2f399c5488684eb66bcbf86c37e
+			annotation PBI_Id = 1935ab0657634da6b784dd841777245f
 
 		role 'DE FR Manager'
 			modelPermission: read
 
-			tablePermission Security_UserCountry = [UserEmail] == "dana.lee@example.com"
+			tablePermission Dim_Country =
+					Dim_Country[CountryCode] IN
+					    SELECTCOLUMNS(
+					        FILTER( ALL( Security_UserCountry ), Security_UserCountry[UserEmail] = "dana.lee@example.com" ),
+					        "CountryCode", Security_UserCountry[CountryCode]
+					    )
 
-			annotation PBI_Id = fd5f4ca93f43408ca3a86d214ddc3563
+			annotation PBI_Id = cfe32274d7ff45fe9eaaaa53d5a671e2
 
-		role 'PL Dynamic'
+		role 'Country Manager'
 			modelPermission: read
 
-			tablePermission Security_UserCountry = Security_UserCountry[UserEmail] = USERPRINCIPALNAME()
+			tablePermission Dim_Country =
+					Dim_Country[CountryCode] IN
+					    SELECTCOLUMNS(
+					        FILTER( ALL( Security_UserCountry ), Security_UserCountry[UserEmail] = USERPRINCIPALNAME() ),
+					        "CountryCode", Security_UserCountry[CountryCode]
+					    )
 
-			annotation PBI_Id = 4a139e2d79ff42eaa7ccdfe99a1284a4
+			tablePermission Security_UserCountry
+
+			annotation PBI_Id = 2ca58197452f41419543b7d71df29faf
+
+		role 'Group Viewer'
+			modelPermission: read
+
+			annotation PBI_Id = 3ebcc5af4f5c42b49e8b055ff0e0a8f1
 
 		annotation __PBI_TimeIntelligenceEnabled = 1
 
 		annotation PBI_QueryOrder = ["Fact_Exposure","Dim_Counterparty","Dim_Country","Dim_Scenario","Dim_Segment","Security_UserCountry","Control_Data"]
 
-		annotation __LastRPTime = 134392108916113572
+		annotation __LastRPTime = 134395892268934883
 
 		annotation PBI_ProTooling = ["WebModelingEdit","TMDLView_Desktop","DaxQueryView_Desktop"]
 
